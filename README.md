@@ -128,6 +128,16 @@ More: [`docs/OVERVIEW.md`](docs/OVERVIEW.md) · [`docs/ARCHITECTURE.md`](docs/AR
 
 A systematic long/short strategy on single-stock futures, with a regime gate built from global ETF features. Its write-up is deliberately candid. It gives a raw backtest of +0.66% per cycle gross over 216 overlapping cycles, and a first month of live paper trading that came in at −0.84% per position. It explains why I withdrew the strategy's +1.36% headline figure: one exit rule used hindsight. See [`flowcv/README.md`](flowcv/README.md).
 
+## Earlier work
+
+This system is the latest stage of a longer path. Cleaned extracts of the earlier stages are in **[ai-engineering-portfolio](https://github.com/bankaraju/ai-engineering-portfolio)**:
+
+- **2025 · Book RAG.** Scanned pages turned into structured text, BGE embeddings in pgvector, and retrieval-based Q&A with topic clustering and question generation.
+- **2025 · Document intelligence.** Project-based platform for bank and company filings: Document AI, a table-extraction cascade, semantic chunking, LlamaIndex/LangChain retrieval, and NLP pattern mining.
+- **2026 · Trust Score.** An LLM extracts management guidance from annual reports and scores it against reported results, with a golden set and quality gates.
+
+Each stage showed where language models are reliable and where they are not, which is why the numbers here are computed deterministically before any model writes a word.
+
 ## How this was built
 
 The design, engineering decisions, and all production code are mine. I used a multi-model agent flow throughout: local models via Ollama (Gemma, GLM 5.3, others), Perplexity Sonar API, and Claude Code as a coding agent. Different models handled different tasks — local models for fast iteration and offline work, Sonar for research and verification, Claude Code for structured code generation. The mutation harness, the `pinned_basis`/`served_basis` split, and the refusal logic all emerged from that process and are described in [`DESIGN.md`](DESIGN.md).
