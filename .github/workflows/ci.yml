@@ -20,5 +20,7 @@ jobs:
         run: python -m pytest -v
       - name: demo runs
         run: python demo.py
+      - name: example page matches the contract
+        run: python render_example.py --check
       - name: every mutant killed by a named test
         run: python tools/mutate.py

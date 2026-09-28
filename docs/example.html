@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Example Brief</title><style>
+:root{--bg:#fbfaf7;--fg:#1d1d1b;--mut:#6b6b66;--rule:#dcd9d0;--acc:#1f3a5f;--chip:#eef1f5;--warn:#fff6e0}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--fg:#ecebe6;--mut:#a3a29b;--rule:#34332f;--acc:#9cc0ea;--chip:#23272d;--warn:#2d2616}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 Georgia,'Times New Roman',serif}
+main{max-width:900px;margin:0 auto;padding:32px 16px 48px}
+.kicker{font:12px/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+h1{font-size:32px;margin:6px 0 4px}h2{font:600 13px/1.4 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--fg)}
+.banner{background:var(--warn);border:1px solid var(--rule);padding:10px 14px;font:13px/1.5 system-ui,sans-serif;margin:18px 0}
+.wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font:14px/1.45 system-ui,sans-serif}
+th{text-align:left;font-weight:600;color:var(--mut);font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--rule);padding:8px 8px 6px}
+td{border-bottom:1px solid var(--rule);padding:9px 8px;vertical-align:top}td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.chip{display:inline-block;background:var(--chip);padding:1px 8px;border-radius:10px;font-size:12px;white-space:nowrap}
+.src{color:var(--mut);font-size:13px}p,li{max-width:70ch}code{font-size:13px}
+.call{border-left:3px solid var(--acc);padding:4px 0 4px 14px;margin:14px 0}
+footer{margin-top:40px;color:var(--mut);font:12px/1.5 system-ui,sans-serif}
+</style></head><body><main>
+<div class=kicker>Anka · example output · FY2026 (year to 31 March 2026)</div>
+<h1>Northwind Components Ltd</h1>
+<div class=banner><strong>Fictional company, illustrative figures.</strong> This page shows the output
+format of a governed research system. It is not a report on any real company and is not
+investment advice.</div>
+
+<h2>Key figures</h2>
+<p>Every number states what it is a number <em>of</em>. The basis column says whether it covers the
+parent company alone (standalone), the whole group (consolidated), a market price, or a figure the
+company stated without saying which. Status and confidence come from where the number was sourced.</p>
+<div class=wrap><table>
+<thead><tr><th>Metric</th><th>Value</th><th>Basis</th><th>Status</th><th>Confidence</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Revenue</td><td class=num>₹4,820 cr</td><td><span class=chip>consolidated group</span></td><td>company reported</td><td>high</td><td class=src>Annual filing, income statement</td></tr>
+<tr><td>Revenue growth</td><td class=num>11.6%</td><td><span class=chip>consolidated group</span></td><td>company reported</td><td>high</td><td class=src>Computed from two filed years</td></tr>
+<tr><td>EBITDA margin</td><td class=num>18.4%</td><td><span class=chip>consolidated group</span></td><td>company reported</td><td>high</td><td class=src>Computed from filed income statement</td></tr>
+<tr><td>Net profit margin</td><td class=num>9.7%</td><td><span class=chip>consolidated group</span></td><td>company reported</td><td>high</td><td class=src>Computed from filed income statement</td></tr>
+<tr><td>Return on equity (group)</td><td class=num>14.9%</td><td><span class=chip>consolidated group</span></td><td>company reported</td><td>high</td><td class=src>Group profit over group equity</td></tr>
+<tr><td>Return on equity (parent company)</td><td class=num>16.0%</td><td><span class=chip>standalone</span></td><td>company reported</td><td>high</td><td class=src>Parent profit over parent equity</td></tr>
+<tr><td>Net debt / EBITDA</td><td class=num>0.8x</td><td><span class=chip>consolidated group</span></td><td>company reported</td><td>high</td><td class=src>Computed from filed balance sheet</td></tr>
+<tr><td>Order book</td><td class=num>₹6,100 cr</td><td><span class=chip>consolidated group</span></td><td>company disclosed</td><td>medium</td><td class=src>Stated in investor presentation</td></tr>
+<tr><td>Revenue growth guided for FY2027</td><td class=num>13.0%</td><td><span class=chip>as stated by the issuer (basis not specified)</span></td><td>company disclosed</td><td>medium</td><td class=src>Management commentary (12-14% range, midpoint shown)</td></tr>
+<tr><td>Price / earnings</td><td class=num>24.3x</td><td><span class=chip>consolidated group</span></td><td>market derived</td><td>high</td><td class=src>₹1,240 share price / ₹51.0 group EPS</td></tr>
+</tbody></table></div>
+
+<h2>Why two ROE figures</h2>
+<div class=call><p>The parent company's return on equity is 16.0%; the group's is 14.9%. A data
+vendor quoting 14.9% would look like a disagreement. Checked by the contract, it is
+<code>BASIS_MISMATCH</code> (reference CONSOLIDATED vs pilot STANDALONE): both numbers are right, on different bases.
+A system that prints "ROE 16.0%" without the basis has made a claim the reader cannot check.</p></div>
+
+<h2>How each cell was decided</h2>
+<ul>
+<li><strong>Basis</strong> is printed from the basis the figure is actually on, never the one that
+was requested. The guided growth figure was requested on a group basis, but management did not say
+which basis it meant, so the page says exactly that.</li>
+<li><strong>Status and confidence</strong> follow the source: computed from filed statements is
+<em>company reported, high</em>; stated in a presentation is <em>company disclosed, medium</em>.</li>
+<li><strong>Derived figures</strong> inherit their inputs' basis and the weakest input's confidence.
+The P/E divides a market price by group EPS, so it is on a group basis. Group EPS divided by parent
+book value would be refused rather than printed.</li>
+<li><strong>Refusals are named.</strong> Had any figure lacked a lawful basis, it would appear here
+as a named refusal code instead of a number. None did on this page.</li>
+</ul>
+
+<footer>Generated by <code>render_example.py</code> from <code>src/basis_contract.py</code> in
+<a href="https://github.com/bankaraju/anka-governed-research">bankaraju/anka-governed-research</a>.
+The same rules are enforced by the tests and the mutation harness in that repository.</footer>
+</main></body></html>

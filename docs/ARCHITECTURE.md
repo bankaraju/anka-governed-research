@@ -1,5 +1,11 @@
 # Anka — Technical Architecture
 
+## Production system (private — not in this repo)
+
+> Everything below describes the full production system, which lives in a private repository.
+> None of the modules, stores or counts listed here are in this repository. What this
+> repository contains is described in [`STRUCTURE.md`](../STRUCTURE.md).
+
 ## Stack
 
 | Layer | Technology |

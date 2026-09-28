@@ -7,6 +7,8 @@
 
 A system for producing equity research where every number is traceable to its source filing, computation method, and reporting basis. The core problem it solves: conventional report generation cannot answer *"where did this number come from?"* Anka answers it structurally, and when it cannot answer, it refuses to print the number and says why.
 
+**See the output:** [a one-page example brief for a fictional company](https://bankaraju.github.io/anka-governed-research/example.html), in which every cell is decided by the contract in this repo.
+
 ## Try it in 30 seconds
 
 No dependencies beyond the Python standard library:
@@ -146,13 +148,15 @@ The design, engineering decisions, and all production code are mine. I used a mu
 
 ```
 demo.py                     30-second walkthrough (stdlib only)
+render_example.py           Renders docs/example.html, the fictional-company example page
+STRUCTURE.md                What each folder does and how the pieces connect
 DESIGN.md                   Why a claim carries two bases; what failed first
 src/basis_contract.py       The contract: status, confidence, basis resolution, refusals, comparison
 tests/                      24 tests
 tools/mutate.py             Mutation harness (kill = named test failure)
-docs/                       Overview, architecture, governance, production results
+docs/                       Overview, architecture (private system), governance, production results, example page
 flowcv/README.md            The FlowCV strategy and its record
-.github/workflows/ci.yml    Tests + demo + mutation harness on Python 3.10–3.12
+.github/workflows/ci.yml    Tests + demo + example-page check + mutation harness on Python 3.10–3.12
 ```
 
 ## License
