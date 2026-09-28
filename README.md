@@ -128,6 +128,10 @@ More: [`docs/OVERVIEW.md`](docs/OVERVIEW.md) · [`docs/ARCHITECTURE.md`](docs/AR
 
 A systematic long/short strategy on single-stock futures, with a regime gate built from global ETF features. Its write-up is deliberately candid. It gives a raw backtest of +0.66% per cycle gross over 216 overlapping cycles, and a first month of live paper trading that came in at −0.84% per position. It explains why I withdrew the strategy's +1.36% headline figure: one exit rule used hindsight. See [`flowcv/README.md`](flowcv/README.md).
 
+## How this was built
+
+The design, engineering decisions, and all production code are mine. I used a multi-model agent flow throughout: local models via Ollama (Gemma, GLM 5.3, others), Perplexity Sonar API, and Claude Code as a coding agent. Different models handled different tasks — local models for fast iteration and offline work, Sonar for research and verification, Claude Code for structured code generation. The mutation harness, the `pinned_basis`/`served_basis` split, and the refusal logic all emerged from that process and are described in [`DESIGN.md`](DESIGN.md).
+
 ## Repository
 
 ```
