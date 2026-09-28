@@ -1,7 +1,5 @@
 # Design notes: why a claim carries two bases
 
-*Draft — first person, to be edited by the author.*
-
 ## The problem I started with
 
 An equity report is a few hundred numbers. For each one a reader is entitled to ask three things: where did it come from, how was it computed, and what is it a number *of*. The third question is the one most systems skip. A company files two sets of accounts: the parent company alone (standalone) and the whole group (consolidated). The same ROE can legitimately be 16.0% on one and 14.9% on the other. Neither is wrong. A report that prints "ROE 16.0%" without saying which has made a claim the reader cannot check.
