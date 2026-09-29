@@ -71,6 +71,12 @@ MUTANTS = [
      "if first is None:", "if False:"),
     ("M19", "UNSPECIFIED is rejected for a derived estimate",
      'if first == "UNSPECIFIED":', "if False:"),
+    ("M20", "a basis outside the closed set refuses, never prints",
+     "if claim.served_basis not in LAWFUL_BASES:", "if False:"),
+    ("M21", "a different period is its own class, never a value difference",
+     "if pilot.period_end != reference.period_end:", "if False:"),
+    ("M22", "every lawful basis serves (BRIDGE dropped from the set)",
+     '"DERIVED", "BRIDGE", "EVENT", "LADDER",', '"DERIVED", "EVENT", "LADDER",'),
 ]
 
 _FAILED = re.compile(r"^FAILED (tests/\S+::\S+)", re.M)

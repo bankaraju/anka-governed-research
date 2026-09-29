@@ -10,8 +10,8 @@ is described, not included, in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | Path | What it does |
 |---|---|
 | `src/basis_contract.py` | The contract. Every claim carries a *served* basis (what the figure is on) and a *pinned* basis (what was requested); only the served basis prints. Derives status and confidence from provenance, resolves the printable basis, compares two claims, derives the basis of a computed figure, and returns a named refusal code when a figure has no lawful basis. Standard library only. |
-| `tests/test_basis_contract.py` | 24 tests, one or more per rule, including the refusal cases. |
-| `tools/mutate.py` | Mutation harness: 19 mutants, each breaking one rule in a temporary copy. A mutant counts as killed only if pytest exits 1 *and* a named test fails. |
+| `tests/test_basis_contract.py` | 27 tests, one or more per rule, including the refusal cases. |
+| `tools/mutate.py` | Mutation harness: 22 mutants, each breaking one rule in a temporary copy. A mutant counts as killed only if pytest exits 1 *and* a named test fails. |
 | `demo.py` | A 30-second terminal walk through five rules on fictional companies. |
 | `render_example.py` | Renders `docs/example.html`, a one-page brief for a fictional company in which every cell is decided by the contract. `--check` fails if the committed page is stale. |
 | `docs/` | `OVERVIEW.md` and `ARCHITECTURE.md` (production system), `GOVERNANCE.md` (the contract's rules in prose), `results/` (measured results from the production system), `example.html` (served on GitHub Pages). |

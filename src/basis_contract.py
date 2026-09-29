@@ -31,6 +31,13 @@ BANK_BANNED_KEYS = frozenset({
 
 _FILED_FORMULA_PREFIXES = ("statements_", "bank_", "xbrl_")
 
+# The closed set of bases a claim may be served on. Anything else (None, a typo,
+# an unmapped vendor code) has no lawful basis and refuses as BASIS_UNRESOLVED.
+LAWFUL_BASES = frozenset({
+    "STANDALONE", "CONSOLIDATED", "UNSPECIFIED", "MARKET",
+    "DERIVED", "BRIDGE", "EVENT", "LADDER",
+})
+
 
 # ── Claim ─────────────────────────────────────────────────────────────────────
 
@@ -44,6 +51,7 @@ class Claim:
     formula_id: str = ""
     is_bank: bool = False
     serve_route: str = "direct"  # "direct" | "issuer_stated_fallback" | ...
+    period_end: str = ""       # ISO date the figure is for, e.g. "2025-03-31"
 
 
 # ── Status and confidence ─────────────────────────────────────────────────────
@@ -75,7 +83,10 @@ def resolve_basis(claim: Claim) -> tuple[Optional[str], Optional[str]]:
     Only the served_basis is printable. If the pinned basis differs from the
     served basis, that is a fact about the resolver's request, not about the
     figure — and it never changes what prints.
+    A served basis outside the closed set refuses: an unknown basis is never printed.
     """
+    if claim.served_basis not in LAWFUL_BASES:
+        return None, "BASIS_UNRESOLVED"
     if claim.is_bank:
         return _resolve_bank_basis(claim)
     return claim.served_basis, None
@@ -120,13 +131,18 @@ def compare_claims(pilot: Claim, reference: Claim) -> tuple[str, str]:
     """Compare two claims. Returns (classification, detail).
 
     A basis mismatch is its own class — never a value difference.
-    Both figures can be correct on their own basis.
+    Both figures can be correct on their own basis. The same holds for period:
+    FY24 against FY25 is a PERIOD_MISMATCH, not a discrepancy.
     """
     if pilot.canonical_key != reference.canonical_key:
         return "KEY_MISMATCH", f"{pilot.canonical_key} vs {reference.canonical_key}"
     if pilot.served_basis != reference.served_basis:
         return "BASIS_MISMATCH", (
             f"reference {reference.served_basis} vs pilot {pilot.served_basis}"
+        )
+    if pilot.period_end != reference.period_end:
+        return "PERIOD_MISMATCH", (
+            f"reference {reference.period_end or '-'} vs pilot {pilot.period_end or '-'}"
         )
     if abs(pilot.value - reference.value) > max(0.05, 0.001 * abs(reference.value)):
         return "VALUE_DIFFERENCE", f"{pilot.value} vs {reference.value}"

@@ -50,7 +50,7 @@ ESTIMATE_OPERAND_BASIS_MISMATCH
 ARCHETYPE_INAPPLICABLE
   → This metric is undefined for this sector.
     ROCE is meaningless for a bank (no operating capital).
-    19 such metrics are banned for financials, enforced by killed mutants.
+    19 such metrics are banned for financials in production, enforced by killed mutants; the public extract pins 8 of them.
 
 SCENARIO_LADDER_DISORDERED
   → A bear/base/bull ladder where bear ≥ base.
@@ -71,6 +71,8 @@ Pilot ROE 16.0% (standalone)
 ```
 
 Both are correct on their own basis. Calling this a "value difference" would send someone chasing a discrepancy that doesn't exist. Anka classifies it as `BASIS_MISMATCH` — its own outcome class, never `VALUE_DIFFERENCE`.
+
+The same rule applies to period: an FY24 figure against an FY25 figure is a `PERIOD_MISMATCH`, never a `VALUE_DIFFERENCE`. And a claim whose served basis is missing or outside the closed set of eight refuses as `BASIS_UNRESOLVED`; an unknown basis is never printed.
 
 ## Sector-specific rules (bank key tiers)
 

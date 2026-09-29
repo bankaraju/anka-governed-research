@@ -60,13 +60,20 @@ Then check that the rules are actually enforced:
 
 ```bash
 pip install pytest
-pytest                   # 24 tests
+pytest                   # 27 tests
 python tools/mutate.py   # breaks each rule on purpose; every break must be caught by a named test
 ```
 
-`tools/mutate.py` reports **19/19 mutants killed**. CI runs all three on every push.
+`tools/mutate.py` reports **22/22 mutants killed**. CI runs all three on every push.
 
 ## The core idea
+
+A company files two sets of accounts: **standalone** (the parent company alone) and **consolidated** (the whole group). The same ROE can be 16.0% on one and 14.9% on the other, and both are correct. So every number must say which it is on.
+
+- **Pinned basis** is the basis the system *asked for* when it fetched the figure. It is kept for audit and never printed.
+- **Served basis** is the basis of the figure it *actually got*. It is the only basis a reader sees.
+
+Think of pinned as the order ticket and served as the fill: you book the fill. When the two differ, a fallback served something other than what was asked for, and the page says what it is really showing.
 
 Every claim carries four governed attributes:
 
@@ -74,7 +81,7 @@ Every claim carries four governed attributes:
 |-------|--------|---------|
 | `status` | company_disclosed, company_reported, calculated, market_derived, estimate | Who produced the number |
 | `confidence` | high, medium, low | Set by the weakest input |
-| `served_basis` | STANDALONE, CONSOLIDATED, UNSPECIFIED, MARKET, DERIVED, EVENT, LADDER | What basis the figure is actually on. **This is what prints.** |
+| `served_basis` | STANDALONE, CONSOLIDATED, UNSPECIFIED, MARKET, DERIVED, BRIDGE, EVENT, LADDER | What basis the figure is actually on. **This is what prints.** |
 | `pinned_basis` | (internal) | What the resolver asked for. Never printed. |
 
 The `served_basis` / `pinned_basis` split exists because of a real failure. In a 231-claim pilot, **51 claims had been served through a fallback route while still stamped with the basis that was requested.** Printing that stamp would have told readers the numbers were on a basis they were not on. The story is in [`DESIGN.md`](DESIGN.md).
@@ -82,6 +89,7 @@ The `served_basis` / `pinned_basis` split exists because of a real failure. In a
 When the data cannot support a figure, the system refuses by name:
 
 ```
+BASIS_UNRESOLVED                 No basis, or one outside the closed set of eight; nothing prints
 BANK_STANDALONE_ABSENT           No standalone filing exists; never falls back to the group figure
 ARCHETYPE_INAPPLICABLE           Metric undefined for this kind of business (e.g. ROCE for a bank)
 ESTIMATE_OPERAND_BASIS_MISMATCH  A derived estimate whose inputs sit on different bases
@@ -95,7 +103,7 @@ A rule nobody can break is not tested. Each rule gets a fail-side mutant, a deli
 
 | Contract | This repo | Production system |
 |----------|-----------|-------------------|
-| Basis contract | 24 tests · **19/19 mutants killed** ([`tools/mutate.py`](tools/mutate.py)) | 33/33 fail-side mutants killed |
+| Basis contract | 27 tests · **22/22 mutants killed** ([`tools/mutate.py`](tools/mutate.py)) | 33/33 fail-side mutants killed |
 | Vector (segment / geography) | — | 24/24 fail-side mutants killed |
 
 Detail: [`docs/results/mutant_verification.md`](docs/results/mutant_verification.md)
@@ -152,7 +160,7 @@ render_example.py           Renders docs/example.html, the fictional-company exa
 STRUCTURE.md                What each folder does and how the pieces connect
 DESIGN.md                   Why a claim carries two bases; what failed first
 src/basis_contract.py       The contract: status, confidence, basis resolution, refusals, comparison
-tests/                      24 tests
+tests/                      27 tests
 tools/mutate.py             Mutation harness (kill = named test failure)
 docs/                       Overview, architecture (private system), governance, production results, example page
 flowcv/README.md            The FlowCV strategy and its record

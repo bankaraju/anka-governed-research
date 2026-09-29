@@ -64,6 +64,21 @@ def test_non_bank_serves_consolidated_even_for_a_bank_tier1_key_name():
     assert resolve_basis(c) == ("CONSOLIDATED", None)
 
 
+def test_unknown_served_basis_refuses():
+    """No basis, or one outside the closed set, has no lawful basis to print."""
+    for bad in (None, "", "CONSOLIDATEDD", "GROUP"):
+        c = Claim("roe_pct", 16.0, bad, "STANDALONE", "own_computed")
+        assert resolve_basis(c) == (None, "BASIS_UNRESOLVED")
+        assert basis_label(c) == "withheld (BASIS_UNRESOLVED)"
+
+def test_every_lawful_basis_serves():
+    """Keep-side control: each of the eight lawful bases is accepted as served."""
+    for b in ("STANDALONE", "CONSOLIDATED", "UNSPECIFIED", "MARKET",
+              "DERIVED", "BRIDGE", "EVENT", "LADDER"):
+        c = Claim("x_key", 1.0, b, b, "own_computed")
+        assert resolve_basis(c) == (b, None)
+
+
 # ── Rendering: only the served basis reaches the page ─────────────────────────
 
 def test_fallback_prints_served_basis_not_pinned():
@@ -115,6 +130,15 @@ def test_different_basis_is_basis_mismatch_not_value_difference():
     assert cls == "BASIS_MISMATCH"
     assert cls != "VALUE_DIFFERENCE"
     assert "STANDALONE" in detail and "CONSOLIDATED" in detail
+
+
+def test_different_period_is_period_mismatch_not_value_difference():
+    """FY24 against FY25 is two different facts, not a discrepancy."""
+    a = Claim("roe_pct", 16.0, "STANDALONE", "STANDALONE", "own_computed", period_end="2025-03-31")
+    b = Claim("roe_pct", 16.0, "STANDALONE", "STANDALONE", "own_computed", period_end="2024-03-31")
+    cls, detail = compare_claims(a, b)
+    assert cls == "PERIOD_MISMATCH"
+    assert "2024-03-31" in detail and "2025-03-31" in detail
 
 
 # ── Operand basis derivation ──────────────────────────────────────────────────
